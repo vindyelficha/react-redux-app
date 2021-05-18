@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
+import { createProject} from '../../store/actions/projectActions';
 
 class CreateProject extends Component{
     state={
@@ -12,7 +14,8 @@ class CreateProject extends Component{
     }
     handleSubmit = (e) =>{
         e.preventDefault(); //prevent default action form yaitu submit dan halaman di refresh ketika user klik button atau enter untuk submit
-        console.log(this.state);
+        // console.log(this.state);
+        this.props.createProject(this.state);
     }
     render(){
         return(
@@ -25,7 +28,7 @@ class CreateProject extends Component{
                     </div>
                     <div className="input-field">
                         <label htmlFor="content">Project Content</label>
-                        <textarea id="content" className="materialize-textarea"/>
+                        <textarea id="content" className="materialize-textarea" onChange={this.handleChange}/>
                     </div>
                     <div className="input-field">
                         <button className="btn pink lighten-1 z-depth-0">Create Project</button>
@@ -36,4 +39,10 @@ class CreateProject extends Component{
     }
 }
 
-export default CreateProject;
+const mapDispatchToProps = (dispatch, ownProps) => {
+    return {
+        createProject:(project) => dispatch(createProject(project))      
+    }
+}
+
+export default connect(null,mapDispatchToProps) (CreateProject);

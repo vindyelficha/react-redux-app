@@ -9,6 +9,7 @@ const ProjectSummary = ({project}) =>{
             <p className = "grey-text">3rd september, 2am</p>
         </div>
     </div>
+    
 
     )
 }
