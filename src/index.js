@@ -7,35 +7,25 @@ import { createStore,applyMiddleware,compose } from 'redux';
 import rootReducer from './store/reducers/rootReducer'
 import {Provider} from 'react-redux'
 import thunk from 'redux-thunk' // redux thunk merupakan middleware
-import { createFirestoreInstance,reduxFirestore, getFirestore } from 'redux-firestore'
-import { reactReduxFirebase, ReactReduxFirebaseProvider, getFirebase } from 'react-redux-firebase';
+import { reduxFirestore, getFirestore } from 'redux-firestore'
+import { reactReduxFirebase, getFirebase } from 'react-redux-firebase';
 import fbConfig from './config/fbConfig'
-import firebase from 'firebase/app';
 
 //harus pass route reducer ke fungsi createStore sehingga dapat menyambungkan reducer dengan store
 const store = createStore(rootReducer, 
     compose(
       applyMiddleware(thunk.withExtraArgument({getFirebase,getFirestore})),
-      reduxFirestore(firebase, fbConfig),
-      // reactReduxFirebase(fbConfig) //error  
+      reduxFirestore(fbConfig),
+      reactReduxFirebase(fbConfig) //error-> udah ga error setelah downgrade versi react-redux-firebase
     )  
   );
 
-const rrfProps = {
-  firebase,
-  config: fbConfig,
-  dispatch: store.dispatch,
-  createFirestoreInstance
-};
-
 ReactDOM.render(
-  // <React.StrictMode>
+  <React.StrictMode>
     <Provider store={store}>
-      {/* <ReactReduxFirebaseProvider {...rrfProps}> */}
-        <App />
-      {/* </ReactReduxFirebaseProvider> */}
+      <App />
     </Provider>,
-  // </React.StrictMode>,
+  </React.StrictMode>,
   document.getElementById('root')
 );
 
