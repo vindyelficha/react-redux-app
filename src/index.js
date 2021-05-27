@@ -16,18 +16,23 @@ const store = createStore(rootReducer,
     compose(
       applyMiddleware(thunk.withExtraArgument({getFirebase,getFirestore})),
       reduxFirestore(fbConfig),
-      reactReduxFirebase(fbConfig) //error-> udah ga error setelah downgrade versi react-redux-firebase
+      reactReduxFirebase(fbConfig, {attachAuthIsReady: true}) //error-> udah ga error setelah downgrade versi react-redux-firebase
     )  
   );
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>,
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+
+//navbar menunjukkan signedoutlinks ketika direfresh (harusnya signedinlinks apabila user sedang login)
+//disebabkan aplikasi di-load dan di-render ke dom sebelum firebase authentication diinisialisasi
+store.firebaseAuthIsReady.then(() => {
+  ReactDOM.render(
+    <React.StrictMode>
+      <Provider store={store}>
+        <App />
+      </Provider>,
+    </React.StrictMode>,
+    document.getElementById('root')
+  );
+})
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
